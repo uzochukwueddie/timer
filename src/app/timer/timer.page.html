@@ -1,0 +1,59 @@
+<ion-content>
+  <ion-item class="datetime">
+    <ion-datetime
+    #timePicker
+    displayFormat="HH:mm:ss"
+    placeholder="Select Time"
+    (ionChange)="changeTime(timePicker.value)"
+    ></ion-datetime>
+  </ion-item>
+
+  <ion-card *ngIf="!timer.hasStarted">
+    <ion-item>
+      <span>{{timer.displayTime}}</span>
+    </ion-item>
+  </ion-card>
+
+  <ion-item *ngIf="timer.hasStarted && timeInSeconds >= 0">
+    <circle-progress
+      [percent]="percent"
+      [radius]="100"
+      [showTitle]="false"
+      [showSubtitle]="true"
+      [showUnits]="false"
+      [subtitle]="timer.displayTime"
+      [subtitleFontSize]="35"
+      [outerStrokeWidth]="10"
+      [outerStrokeColor]="'#4aa1f3'"
+      [showZeroOuterStroke]="false"
+      [backgroundStroke]="'#4aa1f3'"
+      [backgroundStrokeWidth]="2"
+      [outerStrokeGradient]="true"
+      [outerStrokeGradientStopColor]="'#4aa1f3'"
+      [showInnerStroke]="false"
+      [startFromZero]="false"
+    ></circle-progress>
+  </ion-item>
+
+  <ion-fab vertical="bottom">
+    <ion-chip>
+      <ion-fab-button size="small" class="refresh" (click)="initTimer()" [disabled]="timeInSeconds === 0">
+        <ion-icon name="refresh"></ion-icon>
+      </ion-fab-button>
+      <ng-container *ngIf="!timer.hasStarted && timeInSeconds >= 0; else running">
+        <ion-fab-button size="small" (click)="startTimer()" [disabled]="timeInSeconds === 0">
+          <ion-icon name="play"></ion-icon>
+        </ion-fab-button>
+      </ng-container>
+      <ng-template #running>
+        <ion-fab-button size="small" (click)="pauseTimer()" *ngIf="timer.runTimer && timer.hasStarted && !timer.hasFinished">
+          <ion-icon name="pause"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button size="small" (click)="resumeTimer()" *ngIf="!timer.runTimer && timer.hasStarted && !timer.hasFinished">
+          <ion-icon name="play"></ion-icon>
+        </ion-fab-button>
+      </ng-template>
+    </ion-chip>
+  </ion-fab>
+
+</ion-content>
